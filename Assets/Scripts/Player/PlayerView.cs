@@ -1,52 +1,38 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 public class PlayerView : MonoBehaviour
 {
+    private static readonly int HorizontalSpeedHash = Animator.StringToHash("HorizontalSpeed");
+    private static readonly int HitHash = Animator.StringToHash("Hit");
+    private static readonly int IdleHash = Animator.StringToHash("Idle");
+    private static readonly int WinHash = Animator.StringToHash("Win");
+    private static readonly int LoseHash = Animator.StringToHash("Lose");
+
     [SerializeField] private Animator _animator;
 
-    public void UpdateSpeedXParam(float value)
+    public void SetHorizontalSpeed(float value)
     {
-        if (value < 0)
-            value = -1;
-        else if (value > 0)
-            value = 1;
-
-        _animator.SetFloat("XSpeed", value);
-    }
-
-    public void SetJumpTrigger()
-    {
-        _animator.SetTrigger("Jump");
+        _animator.SetFloat(HorizontalSpeedHash, value);
     }
 
     public void SetHitTrigger()
     {
-        _animator.SetTrigger("Hit");
+        _animator.SetTrigger(HitHash);
     }
 
-    public float GetAnimationClipLength(string clipName)
+    public void SetIdleState(bool state)
     {
-        foreach (var clip in _animator.runtimeAnimatorController.animationClips)
-        {
-            if (clip.name == clipName)
-            {
-                Debug.Log(clip.length + ": jump time");
-                return clip.length;
-            }
-        }
-
-        Debug.LogWarning($"Animation clip '{clipName}' not found.");
-        return default;
+        _animator.SetBool(IdleHash, state);
     }
 
-    public void SetJumpSpeedMultiplier(float value)
+    public void SetWinTrigger()
     {
-        _animator.SetFloat("JumpSpeedMultiplier", value);
+        _animator.SetTrigger(WinHash);
     }
 
-    public void SetIdlingState(bool state)
+    public void SetLoseTrigger()
     {
-        _animator.SetBool("IsIdling", state);
+        _animator.SetTrigger(LoseHash);
     }
 }

@@ -1,49 +1,62 @@
-﻿using System;
+using System;
 using UnityEngine;
 
-public class PCPlayerInput : IPlayerInput
+public class PcPlayerInput : IPlayerInput
 {
-    public event Action<float> OnHorizontalChanged;
-    public event Action OnJump;
-    public event Action OnLeftPressed;
-    public event Action OnRightPressed;
+    private const float MaxHorizontalValue = 1f;
+    private const float MinHorizontalValue = -1f;
+    private const float SwipeThreshold = 10f;
 
     private bool _enabled;
+    private Vector2 _startPos;
+    private bool _isSwiping;
+
+    public event Action<float> HorizontalInputChanged;
 
     public void Enable() => _enabled = true;
-    public void Disable() => _enabled = false;
+
+    public void Disable()
+    {
+        _enabled = false;
+        _isSwiping = false;
+        HorizontalInputChanged?.Invoke(0f);
+    }
 
     public void Update()
     {
-        if (!_enabled) 
+        if (!_enabled)
             return;
 
-        float horizontal = 0f;
-
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetMouseButtonDown(0))
         {
-            horizontal = -1f;
-            OnLeftPressed?.Invoke();
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            horizontal = 1f;
-            OnRightPressed?.Invoke();
+            _startPos = Input.mousePosition;
+            _isSwiping = false;
         }
 
-        OnHorizontalChanged?.Invoke(horizontal);
+        if (Input.GetMouseButton(0))
+        {
+            float delta = Mathf.Abs(Input.mousePosition.x - _startPos.x);
 
-        if (Input.GetKeyDown(KeyCode.Space))
-            OnJump?.Invoke();
-    }
+            if (!_isSwiping && delta > SwipeThreshold)
+                _isSwiping = true;
 
-    public int GetForkDirection()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A)) 
-            return -1;
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)) 
-            return 1;
-
-        return 0;
+            if (_isSwiping)
+            {
+                float mouseX = Input.mousePosition.x;
+                float screenCenterX = Screen.width / 2f;
+                float normalizedX = (mouseX - screenCenterX) / screenCenterX;
+                float horizontal = Mathf.Clamp(normalizedX, MinHorizontalValue, MaxHorizontalValue);
+                HorizontalInputChanged?.Invoke(horizontal);
+            }
+        }
+        else
+        {
+            if (_isSwiping)
+            {
+                _isSwiping = false;
+                HorizontalInputChanged?.Invoke(0f);
+            }
+        }
     }
 }
+
