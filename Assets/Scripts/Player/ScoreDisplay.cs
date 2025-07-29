@@ -10,7 +10,17 @@ public class ScoreDisplay : MonoBehaviour
     private int _currentValue = 0;
     private Tween _activeTween;
 
-    public void UpdateText(int newValue)
+    private void Start()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void ShowText()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void UpdateText(int value)
     {
         _activeTween?.Kill();
 
@@ -20,7 +30,7 @@ public class ScoreDisplay : MonoBehaviour
                 _currentValue = x;
                 _text.text = _currentValue.ToString();
             },
-            newValue,
+            value,
             _animationDuration
         ).SetEase(Ease.OutQuad);
     }

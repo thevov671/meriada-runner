@@ -26,6 +26,14 @@ public class BackpackView : MonoBehaviour
     [SerializeField] private float _delayBetweenCubes = 0.1f;
     [SerializeField] private float _flyDuration = 0.5f;
     [SerializeField] private float _endScaleFactor = 2f;
+    [SerializeField] private float _endRotationValueX = -90;
+    [SerializeField] private ParticleSystem _addItemVFX;
+
+    [Header("Стабилизация башни")]
+    [SerializeField] private float _springForce = 10000f; //5000f — мягко; 10000f — твердо; 20000f — как камень.
+    [SerializeField] private float _springDamper = 100f;
+    [SerializeField] private float _stabilizeDelay = 0.5f;
+
 
     [Header("Поворот кубиков при движении")]
     [SerializeField] private float _yawAngle = 20f;
@@ -34,8 +42,10 @@ public class BackpackView : MonoBehaviour
     [Header("SFX")]
     [SerializeField] private AudioClip _bonusOnFinishSFX;
 
-
     private Vector3 _baseScale;
+    private Coroutine _stabilizeRoutine;
+
+    public int CubeCount => _cubes.Count;
 
     private void Start()
     {
@@ -53,6 +63,34 @@ public class BackpackView : MonoBehaviour
             cube.DOLocalRotate(targetEuler, _yawDuration).SetEase(Ease.OutSine);
         }
     }
+
+
+    public void TryStabilizeTower()
+    {
+        if (_stabilizeRoutine != null)
+            StopCoroutine(_stabilizeRoutine);
+
+        _stabilizeRoutine = StartCoroutine(StabilizeTowerRoutine());
+    }
+
+    private IEnumerator StabilizeTowerRoutine()
+    {
+        yield return new WaitForSeconds(_stabilizeDelay);
+
+        foreach (var cube in _cubes)
+        {
+            HingeJoint joint = cube.GetComponent<HingeJoint>();
+            if (joint != null)
+            {
+                JointSpring spring = joint.spring;
+                spring.spring = _springForce;
+                spring.damper = _springDamper;
+                spring.targetPosition = 0f;
+                joint.spring = spring;
+            }
+        }
+    }
+
 
 
     public void AddCube(Transform newCube)
@@ -82,7 +120,16 @@ public class BackpackView : MonoBehaviour
             yield return null;
         }
 
+        RotateChildObject(cube);
         SetupCube(cube);
+        _addItemVFX.Play();
+    }
+
+    private void RotateChildObject(Transform cube)
+    {
+        Transform child = cube.GetChild(0);
+        Vector3 targetEuler = new Vector3(_endRotationValueX, child.localEulerAngles.y, child.localEulerAngles.z);
+        child.DOLocalRotate(targetEuler, 0.3f).SetEase(Ease.OutSine);
     }
 
     private Vector3 GetCurrentTargetPosition()
@@ -134,10 +181,14 @@ public class BackpackView : MonoBehaviour
         }
 
         Rigidbody rb = topCube.GetComponent<Rigidbody>();
+
         if (rb != null)
             rb.isKinematic = true;
 
-        Vector3 jumpTarget = topCube.position + Vector3.back + Vector3.up;
+        Vector3 randomDir = (Vector3.up + UnityEngine.Random.onUnitSphere * 0.5f).normalized;
+        randomDir.y = Mathf.Abs(randomDir.y);
+        Vector3 jumpTarget = topCube.position + randomDir * 2f;
+
         Sequence seq = DOTween.Sequence();
         seq.Append(topCube.DOJump(jumpTarget, 1f, 1, 0.5f).SetEase(Ease.OutQuad));
         seq.Join(topCube.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InQuad));
@@ -148,15 +199,15 @@ public class BackpackView : MonoBehaviour
         });
     }
 
+
     public void AnimateScoreConversionToCameraCorner(Camera cam, float targetDistance = 5f, Action<int> onPointAdded = null, Action onComplete = null)
     {
         StartCoroutine(ConvertCubesToScreenCorner(cam, targetDistance, onPointAdded, onComplete));
     }
 
-    private IEnumerator ConvertCubesToScreenCorner(Camera cam, float distance, Action<int> onPointAdded, Action onComplete)
+    private IEnumerator ConvertCubesToScreenCorner(Camera cam, float targetDistance, Action<int> onPointAdded, Action onComplete)
     {
         yield return new WaitForSeconds(_delayToStart);
-
 
         for (int i = _cubes.Count - 1; i >= 0; i--)
         {
@@ -165,6 +216,10 @@ public class BackpackView : MonoBehaviour
             _cubes.RemoveAt(i);
             cube.SetParent(null);
 
+            // Расстояние до камеры
+            float distance = Vector3.Distance(cam.transform.position, cube.position);
+
+            // Определяем экранный угол с корректным z
             Vector3 screenCorner = cam.ViewportToWorldPoint(new Vector3(1f, 1f, distance));
 
             Sequence seq = DOTween.Sequence();
@@ -181,6 +236,7 @@ public class BackpackView : MonoBehaviour
 
         onComplete?.Invoke();
     }
+
 
     public void Lean(float direction)
     {

@@ -3,6 +3,8 @@ using DG.Tweening;
 
 public class HealthItem : MonoBehaviour
 {
+    [SerializeField] private GameObject _shadowObject;
+
     private Vector3 _initialPosition;
     private Quaternion _initialRotation;
 
@@ -41,6 +43,7 @@ public class HealthItem : MonoBehaviour
         if (other.TryGetComponent(out PlayerController player))
         {
             player.AddItem(this);
+            _shadowObject.gameObject.SetActive(false);
         }
     }
 }

@@ -9,7 +9,7 @@ public class HitArea : MonoBehaviour
         if (other.TryGetComponent(out PlayerController player))
         {
             player.TakeHit();
-            _parent.SetActive(false);
+            gameObject.SetActive(false);
         }
     }
 }

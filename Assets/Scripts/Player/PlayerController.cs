@@ -14,6 +14,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private BackpackView _backpackView;
     [SerializeField] private ScoreDisplay _scoreDisplay;
 
+    [Header("Добавление валюты")]
+    [SerializeField] private HealthItem _bonusCubePrefab;
+    [SerializeField] private float _timeBetweenAdd = 0.2f;
+
     [Header("Boundaries")]
     [SerializeField] private float _leftBoundaryX = -3f;
     [SerializeField] private float _rightBoundaryX = 3f;
@@ -71,9 +75,13 @@ public class PlayerController : MonoBehaviour
         AudioManager.Instance.Unpause();
     }
 
-    public void Init(IPlayerInput input)
+    private HealthItemPool _itemPool;
+
+    public void Init(IPlayerInput input, HealthItemPool itemPool)
     {
         _input = input;
+        _itemPool = itemPool;
+
         _input.Enable();
         _input.HorizontalInputChanged += OnHorizontalInputChanged;
 
@@ -84,6 +92,7 @@ public class PlayerController : MonoBehaviour
 
         StartCoroutine(TutorialCoroutine());
     }
+
 
     private IEnumerator TutorialCoroutine()
     {
@@ -153,32 +162,62 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void AddBonus(int value)
+    public void AddBonus(int count)
+    {
+        if (count > 0)
+        {
+            StartCoroutine(SpawnBonusCubesRoutine(count));
+        }
+        else
+        {
+            _collectNegativeBonusVFX.Play();
+            int removeCount = Mathf.Min(Mathf.Abs(count), _backpackView.CubeCount);
+            StartCoroutine(RemoveCubesRoutine(removeCount));
+        }
+    }
+
+    public void AddScore(int value)
     {
         _score += value;
-
-        if (_score < 0)
-            _score = 0;
-
-        if (value > 0)
-            _collectPositiveBonusVFX.Play();
-        else
-            _collectNegativeBonusVFX.Play();
-
         _scoreDisplay.UpdateText(_score);
     }
+
+    private IEnumerator RemoveCubesRoutine(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            _backpackView.RemoveItem();
+
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+
+    private IEnumerator SpawnBonusCubesRoutine(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 spawnPos = transform.position + Vector3.up * UnityEngine.Random.Range(3f, 5f);
+            HealthItem item = _itemPool.Get(spawnPos);
+            AddItem(item);
+
+            yield return new WaitForSeconds(_timeBetweenAdd);
+        }
+    }
+
 
     public void HandleWin()
     {
         AudioManager.Instance.Pause();
         AudioManager.Instance.PlayClip(_winSFX);
 
+        _scoreDisplay.ShowText();
         _winVFX.Play();
         _view.SetWinTrigger();
         _isPaused = true;
         SwitchCameraTo(_endGameCamera);
 
-        _backpackView.AnimateScoreConversionToCameraCorner(Camera.main, onPointAdded: AddBonus, onComplete: () => Win?.Invoke());
+        _backpackView.AnimateScoreConversionToCameraCorner(Camera.main, onPointAdded: AddScore, onComplete: () => Win?.Invoke());
     }
 
     private void HandleLose()
@@ -206,7 +245,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             _backpackView.ResetLean();
+            _backpackView.TryStabilizeTower();
         }
-
     }
 }
