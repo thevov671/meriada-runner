@@ -36,7 +36,7 @@ public class BackpackView : MonoBehaviour
 
 
     [Header("Поворот кубиков при движении")]
-    [SerializeField] private float _yawAngle = 20f;
+    [SerializeField] private float _yawAngle = 8f;
     [SerializeField] private float _yawDuration = 0.25f;
 
     [Header("SFX")]
@@ -146,23 +146,42 @@ public class BackpackView : MonoBehaviour
 
         Rigidbody rb = cube.gameObject.AddComponent<Rigidbody>();
         rb.interpolation = RigidbodyInterpolation.Interpolate;
-        rb.mass = 5f + _cubes.Count * 0.1f;
-        rb.solverIterations = 20;
+        rb.mass = 1f;
+        rb.solverIterations = 40;
         rb.solverVelocityIterations = 20;
 
-        HingeJoint joint = cube.gameObject.AddComponent<HingeJoint>();
-        joint.axis = Vector3.forward;
-        joint.useLimits = true;
-        joint.limits = new JointLimits { min = -5f, max = 5f };
-        joint.useSpring = true;
-        joint.spring = new JointSpring { spring = 200f, damper = 5f, targetPosition = 0f };
-
+        ConfigurableJoint joint = cube.gameObject.AddComponent<ConfigurableJoint>();
         joint.connectedBody = _cubes.Count == 0
             ? _backpackRoot.GetComponent<Rigidbody>()
             : _cubes[^1].GetComponent<Rigidbody>();
 
+        joint.axis = Vector3.forward;
+        joint.secondaryAxis = Vector3.up;
+
+        joint.xMotion = ConfigurableJointMotion.Locked;
+        joint.yMotion = ConfigurableJointMotion.Locked;
+        joint.zMotion = ConfigurableJointMotion.Locked;
+
+        joint.angularXMotion = ConfigurableJointMotion.Limited;
+        joint.angularYMotion = ConfigurableJointMotion.Locked;
+        joint.angularZMotion = ConfigurableJointMotion.Locked;
+
+        SoftJointLimit limit = new SoftJointLimit();
+        limit.limit = 10f; 
+        joint.lowAngularXLimit = limit;
+        joint.highAngularXLimit = limit;
+
+        JointDrive angularDrive = new JointDrive
+        {
+            positionSpring = 20000f,
+            positionDamper = 500f,
+            maximumForce = Mathf.Infinity
+        };
+        joint.angularXDrive = angularDrive;
+
         _cubes.Add(cube);
     }
+
 
     public void RemoveItem()
     {
@@ -173,7 +192,7 @@ public class BackpackView : MonoBehaviour
         _cubes.RemoveAt(_cubes.Count - 1);
         topCube.SetParent(null);
 
-        HingeJoint joint = topCube.GetComponent<HingeJoint>();
+        ConfigurableJoint joint = topCube.GetComponent<ConfigurableJoint>();
         if (joint != null)
         {
             joint.connectedBody = null;
@@ -181,9 +200,6 @@ public class BackpackView : MonoBehaviour
         }
 
         Rigidbody rb = topCube.GetComponent<Rigidbody>();
-
-        if (rb != null)
-            rb.isKinematic = true;
 
         Vector3 randomDir = (Vector3.up + UnityEngine.Random.onUnitSphere * 0.5f).normalized;
         randomDir.y = Mathf.Abs(randomDir.y);
@@ -194,10 +210,14 @@ public class BackpackView : MonoBehaviour
         seq.Join(topCube.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InQuad));
         seq.OnComplete(() =>
         {
-            if (rb != null) Destroy(rb);
+            if (rb != null)
+                Destroy(rb);
             Destroy(topCube.gameObject);
         });
     }
+
+
+
 
 
     public void AnimateScoreConversionToCameraCorner(Camera cam, float targetDistance = 5f, Action<int> onPointAdded = null, Action onComplete = null)
