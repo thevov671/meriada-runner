@@ -57,37 +57,37 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3057461405784804063}
     m_Modifications:
+    - target: {fileID: 391038820717284635, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2132565094010494972, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 0c077363ac814be4b811db9f01d53a3d, type: 2}
+      objectReference: {fileID: 2100000, guid: 7307748b2a9333947b68d542a2839b37, type: 2}
     - target: {fileID: 3905335518868262718, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 0c077363ac814be4b811db9f01d53a3d, type: 2}
+      objectReference: {fileID: 2100000, guid: 7307748b2a9333947b68d542a2839b37, type: 2}
     - target: {fileID: 4200330838119943422, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: m_Name
       value: AreaTrigger
       objectReference: {fileID: 0}
     - target: {fileID: 6006894005932586100, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: _bonusValue
-      value: 50
+      value: 125
       objectReference: {fileID: 0}
     - target: {fileID: 6241461799761165719, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: m_text
-      value: +50
-      objectReference: {fileID: 0}
-    - target: {fileID: 6377781552106779321, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.75
+      value: +125
       objectReference: {fileID: 0}
     - target: {fileID: 6377781552106779321, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6377781552106779321, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6377781552106779321, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -119,6 +119,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6377781552106779321, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8398152653884991753, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
+      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
@@ -153,17 +157,37 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3057461405784804063}
     m_Modifications:
+    - target: {fileID: 391038820717284635, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2132565094010494972, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 0c077363ac814be4b811db9f01d53a3d, type: 2}
+      objectReference: {fileID: 2100000, guid: 7307748b2a9333947b68d542a2839b37, type: 2}
+    - target: {fileID: 3656091410320367405, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3656091410320367405, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
+      propertyPath: m_Color.g
+      value: 0.8224866
+      objectReference: {fileID: 0}
+    - target: {fileID: 3656091410320367405, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
+      propertyPath: m_Color.r
+      value: 0.2980392
+      objectReference: {fileID: 0}
     - target: {fileID: 3905335518868262718, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 0c077363ac814be4b811db9f01d53a3d, type: 2}
+      objectReference: {fileID: 2100000, guid: 7307748b2a9333947b68d542a2839b37, type: 2}
     - target: {fileID: 4200330838119943422, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: m_Name
       value: AreaTrigger (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5128545036898395904, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6006894005932586100, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: _bonusValue
@@ -174,16 +198,12 @@ PrefabInstance:
       value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 6377781552106779321, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 6377781552106779321, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6377781552106779321, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6377781552106779321, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -221,6 +241,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 79fe062c991422c4fbfa1d438a0ea6e4, type: 2}
+    - target: {fileID: 8398152653884991753, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8801687027430542610, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
     - {fileID: 911253664975869293, guid: 1c6f818c57bdd2649a9be944658b944d, type: 3}
