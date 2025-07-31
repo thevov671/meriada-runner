@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public class FinishGameUI : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class FinishGameUI : MonoBehaviour
     [SerializeField] private TMP_Text _scoreText;
     [SerializeField] private Button _restartButton;
     [SerializeField] private Button _quitButton;
+    [SerializeField] private Button _subscribeButton;
 
     private void Start()
     {
@@ -19,6 +21,19 @@ public class FinishGameUI : MonoBehaviour
         // Подписка на кнопки
         _restartButton.onClick.AddListener(OnRestartClicked);
         _quitButton.onClick.AddListener(OnQuitClicked);
+        _subscribeButton.onClick.AddListener(OnSubscribeButtonClicked);
+    }
+
+    private void OnDestroy()
+    {
+        _restartButton.onClick.RemoveListener(OnRestartClicked);
+        _quitButton.onClick.RemoveListener(OnQuitClicked);
+        _subscribeButton.onClick.RemoveListener(OnSubscribeButtonClicked);
+    }
+
+    private void OnSubscribeButtonClicked()
+    {
+        UnityConnector.Singleton.OnJoinGroupButtonClick();
     }
 
     private void OnRestartClicked()
