@@ -200,22 +200,28 @@ public class BackpackView : MonoBehaviour
         }
 
         Rigidbody rb = topCube.GetComponent<Rigidbody>();
-
-        Vector3 randomDir = (Vector3.up + UnityEngine.Random.onUnitSphere * 0.5f).normalized;
-        randomDir.y = Mathf.Abs(randomDir.y);
-        Vector3 jumpTarget = topCube.position + randomDir * 2f;
-
-        Sequence seq = DOTween.Sequence();
-        seq.Append(topCube.DOJump(jumpTarget, 1f, 1, 0.5f).SetEase(Ease.OutQuad));
-        seq.Join(topCube.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InQuad));
-        seq.OnComplete(() =>
+        if (rb != null)
         {
-            if (rb != null)
-                Destroy(rb);
-            Destroy(topCube.gameObject);
-        });
-    }
+            rb.isKinematic = false;
+            rb.useGravity = true;
+        }
 
+        Collider col = topCube.GetComponent<Collider>();
+        if (col != null)
+        {
+            col.isTrigger = false; // ← самое важное
+            col.enabled = true;
+        }
+
+        Vector3 forceDir = (Vector3.up + UnityEngine.Random.insideUnitSphere * 0.5f).normalized;
+        forceDir.y = Mathf.Abs(forceDir.y);
+
+        if (rb != null)
+        {
+            rb.AddForce(forceDir * 5f, ForceMode.Impulse);
+            rb.AddTorque(UnityEngine.Random.insideUnitSphere * 5f, ForceMode.Impulse);
+        }
+    }
 
 
 
