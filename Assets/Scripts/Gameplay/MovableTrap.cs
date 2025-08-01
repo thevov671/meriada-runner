@@ -3,30 +3,48 @@ using DG.Tweening;
 
 public class MovableTrap : Trap
 {
-    [SerializeField] private float _moveLength = 3f;
+    [Header("Move Settings")]
     [SerializeField] private float _moveDuration = 2f;
+    [SerializeField] private bool _startFromLeft = true;
+
+    [Header("Debug")]
     [SerializeField] private Color _gizmoColor = Color.red;
 
-    private Vector3 _startPos;
-    private Vector3 _endPos;
+    private float _leftX;
+    private float _rightX;
+    private float _targetX;
+    private bool _movingToLeft;
+
+    private void Awake()
+    {
+        var left = GameObject.FindGameObjectWithTag("LeftSide");
+        var right = GameObject.FindGameObjectWithTag("RightSide");
+
+        _leftX = left.transform.position.x;
+        _rightX = right.transform.position.x;
+    }
 
     private void Start()
     {
-        _startPos = transform.position;
-        _endPos = _startPos + Vector3.right * _moveLength;
-
-        transform.DOMove(_endPos, _moveDuration)
-            .SetEase(Ease.InOutSine)
-            .SetLoops(-1, LoopType.Yoyo);
+        _movingToLeft = _startFromLeft;
+        MoveToTarget();
     }
 
-    private void OnDrawGizmosSelected()
+    private void MoveToTarget()
     {
-        Vector3 previewStart = Application.isPlaying ? _startPos : transform.position;
-        Vector3 previewEnd = previewStart + Vector3.right * _moveLength;
+        _targetX = _movingToLeft ? _leftX : _rightX;
+        float currentX = transform.position.x;
+        float distance = Mathf.Abs(_targetX - currentX);
 
-        Gizmos.color = _gizmoColor;
-        Gizmos.DrawLine(previewStart, previewEnd);
-        Gizmos.DrawSphere(previewEnd, 0.2f);
+        float speed = Mathf.Abs(_rightX - _leftX) / _moveDuration;
+        float duration = distance / speed;
+
+        transform.DOMoveX(_targetX, duration)
+            .SetEase(Ease.InOutSine)
+            .OnComplete(() =>
+            {
+                _movingToLeft = !_movingToLeft;
+                MoveToTarget(); 
+            });
     }
 }
