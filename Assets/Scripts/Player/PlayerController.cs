@@ -14,6 +14,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private BackpackView _backpackView;
     [SerializeField] private ScoreDisplay _scoreDisplay;
 
+    [Header("Speed Settings")]
+    [SerializeField] private float _forwardSpeed = 10;
+    [SerializeField] private float _sideSpeed = 8;
+
     [Header("Добавление валюты")]
     [SerializeField] private HealthItem _bonusCubePrefab;
     [SerializeField] private float _timeBetweenAdd = 0.2f;
@@ -46,7 +50,6 @@ public class PlayerController : MonoBehaviour
     private float _inputX;
     private float _currentInputX;
 
-    private float _speed = 0;
     private float _health = 1;
     private int _score = 0;
 
@@ -60,7 +63,7 @@ public class PlayerController : MonoBehaviour
     private void HandleMovement()
     {
         _currentInputX = Mathf.Lerp(_currentInputX, _inputX, Time.deltaTime * 10f);
-        Vector3 movement = new Vector3(_currentInputX * _speed, 0, _speed) * Time.deltaTime;
+        Vector3 movement = new Vector3(_currentInputX * _sideSpeed, 0, _forwardSpeed) * Time.deltaTime;
 
         Vector3 nextPosition = transform.position + new Vector3(movement.x, 0, 0);
         nextPosition.x = Mathf.Clamp(nextPosition.x, _leftBoundaryX, _rightBoundaryX);
@@ -84,8 +87,6 @@ public class PlayerController : MonoBehaviour
 
         _input.Enable();
         _input.HorizontalInputChanged += OnHorizontalInputChanged;
-
-        _speed = _config.MovementSpeed;
         _health = 1;
 
         SwitchCameraTo(_pausedCamera);
