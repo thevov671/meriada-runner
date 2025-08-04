@@ -138690,6 +138690,8 @@ MonoBehaviour:
   _config: {fileID: 11400000, guid: 02fd12ad265f30243a7aa102ae355ba7, type: 2}
   _backpackView: {fileID: 445430397714264621}
   _scoreDisplay: {fileID: 5819123077210747493}
+  _forwardSpeed: 10
+  _sideSpeed: 10
   _bonusCubePrefab: {fileID: 909493296823532780, guid: dc2d2177091912c408982a2cda3b72e1, type: 3}
   _timeBetweenAdd: 0.2
   _leftBoundaryX: -3
