@@ -3631,6 +3631,10 @@ PrefabInstance:
       propertyPath: _moveLength
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 4166536718803363857, guid: 701167d14aa43324f81241fd83b0f393, type: 3}
+      propertyPath: _startFromLeft
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8304564095499629390, guid: 701167d14aa43324f81241fd83b0f393, type: 3}
       propertyPath: m_Name
       value: MovableTrap (7)
@@ -6812,6 +6816,10 @@ PrefabInstance:
     - target: {fileID: 4166536718803363857, guid: 701167d14aa43324f81241fd83b0f393, type: 3}
       propertyPath: _moveLength
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4166536718803363857, guid: 701167d14aa43324f81241fd83b0f393, type: 3}
+      propertyPath: _startFromLeft
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8304564095499629390, guid: 701167d14aa43324f81241fd83b0f393, type: 3}
       propertyPath: m_Name
