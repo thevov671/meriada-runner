@@ -33,7 +33,6 @@ public class ForkAreaTrigger : MonoBehaviour
     private void OnPlayerHorizontalInputChanged(float value)
     {
         _currentChooseValue += value * Time.deltaTime;
-        Debug.Log(_currentChooseValue);
 
         if (Mathf.Abs(_currentChooseValue) > ValueToChoose)
         {

@@ -4,12 +4,10 @@ using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private PlayerView _view;
-    [SerializeField] private CharacterController _controller;
 
     [Header("Speed Settings")]
     [SerializeField] private float _forwardSpeed = 10;
@@ -39,7 +37,6 @@ public class PlayerController : MonoBehaviour
 
     private IPlayerInput _input;
     private float _inputX;
-    private float _currentInputX;
 
     private CinemachineCamera _currentCamera;
 
@@ -88,11 +85,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnForkAreaTriggerPathChosen(Transform nextRoadPivot)
     {
-        Vector3 direction = nextRoadPivot.position - transform.position;
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
         float rotateTime = 0.5f;
 
-        transform.DORotateQuaternion(targetRotation, rotateTime).OnComplete(() =>
+        transform.DOLocalRotate(nextRoadPivot.eulerAngles, rotateTime).OnComplete(() =>
         {
             _isPaused = false;
             _view.SetIdleState(false);
@@ -102,19 +97,11 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        float lerpSpeed = 10f;
-        _currentInputX = Mathf.Lerp(_currentInputX, _inputX, Time.deltaTime * lerpSpeed);
+        Vector3 sideMove = transform.right * _inputX * _sideSpeed * Time.deltaTime;
+        Vector3 forwardMove = transform.forward * _forwardSpeed * Time.deltaTime;
 
-        Vector3 localMovement = new Vector3(_currentInputX * _sideSpeed, 0f, _forwardSpeed) * Time.deltaTime;
-        Vector3 worldMovement = transform.TransformDirection(localMovement);
-
-        Vector3 nextPosition = transform.position + new Vector3(worldMovement.x, 0f, 0f);
-        nextPosition.x = Mathf.Clamp(nextPosition.x, _leftBoundaryX, _rightBoundaryX);
-        worldMovement.x = nextPosition.x - transform.position.x;
-
-        _controller.Move(worldMovement);
+        transform.position += forwardMove + sideMove;
     }
-
 
     private IEnumerator TutorialCoroutine()
     {
