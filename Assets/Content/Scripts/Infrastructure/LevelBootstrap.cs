@@ -4,6 +4,7 @@ public class LevelBootstrap : MonoBehaviour
 {
     [Header("UI Settings")]
     [SerializeField] private TutorialDisplay _tutorialDisplay;
+    [SerializeField] private CollectedItemsDisplay _collectedItemsDisplay;
 
     [Header("Player Start Settings")]
     [SerializeField] private PlayerController _playerPrefab;
@@ -18,5 +19,6 @@ public class LevelBootstrap : MonoBehaviour
         playerInstance.Init(isMobile? new MobilePlayerInput() : new PcPlayerInput());
 
         _tutorialDisplay.Init(isMobile, playerInstance);
+        _collectedItemsDisplay.Init(playerInstance);
     }
 }

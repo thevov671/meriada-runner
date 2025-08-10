@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
 
     public event Action Win;
     public event Action TutorialFinished;
+    public event Action<Item> ItemCollected;
 
     public void Init(IPlayerInput input)
     {
@@ -80,6 +81,12 @@ public class PlayerController : MonoBehaviour
             _view.SetIdleState(true);
             forkAreaTrigger.Activate(_input);
             SwitchCameraTo(_forkCamera);
+        }
+
+        if (other.TryGetComponent(out Item item))
+        {
+            ItemCollected?.Invoke(item);
+            item.gameObject.SetActive(false);
         }
     }
 

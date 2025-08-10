@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 1261620810114837864}
   - component: {fileID: 2612202383112511095}
   m_Layer: 5
-  m_Name: Icon
+  m_Name: ItemIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -285,3 +285,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 961bc796ff6fc584e9cc7a705301ab51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _itemIcon: {fileID: 2612202383112511095}

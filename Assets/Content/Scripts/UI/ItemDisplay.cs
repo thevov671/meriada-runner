@@ -1,16 +1,13 @@
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ItemDisplay : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Image _itemIcon; 
 
-    // Update is called once per frame
-    void Update()
+    public void Init(Sprite icon)
     {
-        
+        _itemIcon.sprite = icon;   
     }
 }
